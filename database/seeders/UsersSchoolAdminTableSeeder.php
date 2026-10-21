@@ -20,53 +20,63 @@ class UsersSchoolAdminTableSeeder extends Seeder
     {
         $schools = School::where('status', 1)->get();
 
-        foreach ($schools as $school) {
+        foreach ($schools as$school) {
 
             // Admin
-            $schoolAdmin = User::factory()->create([
-                'school_id'    => $school->id,
-                'name'         => 'demoschool' . $school->id,
-                'email'        => 'demoschool' . $school->id . '@mailinator.com',
-                'mobile_no'    => '2230456789',
-                'usergroup_id' => 3
-            ]);
+            $schoolAdmin = User::firstOrCreate(
+                ['name' => 'demoschool' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'demoschool' . $school->id,
+                    'email'        => 'demoschool' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456789',
+                    'usergroup_id' => 3
+                ])
+            );
 
-            Userprofile::factory()->create([
-                'school_id'     => $school->id,
-                'user_id'       => $schoolAdmin->id,
-                'usergroup_id'  => 3,
-                'firstname'     => 'demo',
-                'lastname'      => 'school',
-                'profession'    => 'admin',
-                'address'       => 'Namakkal,Tamilnadu,India',
-                'country_id'    => 7,
-                'city_id'       => 31,
-                'state_id'      => 24,
-                'pincode'       => '625001'
-            ]);
+            Userprofile::updateOrCreate(
+                ['user_id' => $schoolAdmin->id],
+                [
+                    'school_id'     => $school->id,
+                    'usergroup_id'  => 3,
+                    'firstname'     => 'demo',
+                    'lastname'      => 'school',
+                    'profession'    => 'admin',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
 
             // Librarian
-            $librarian = User::factory()->create([
-                'school_id'    => $school->id,
-                'name'         => 'librarian' . $school->id,
-                'email'        => 'librarian' . $school->id . '@mailinator.com',
-                'mobile_no'    => '2230456701',
-                'usergroup_id' => 8
-            ]);
+            $librarian = User::firstOrCreate(
+                ['name' => 'librarian' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'librarian' . $school->id,
+                    'email'        => 'librarian' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456701',
+                    'usergroup_id' => 8
+                ])
+            );
 
-            Userprofile::factory()->create([
-                'school_id'     => $librarian->school_id,
-                'user_id'       => $librarian->id,
-                'usergroup_id'  => $librarian->usergroup_id,
-                'firstname'     => 'librarian',
-                'lastname'      => 'librarian',
-                'profession'    => 'librarian',
-                'address'       => 'Namakkal,Tamilnadu,India',
-                'country_id'    => 7,
-                'city_id'       => 31,
-                'state_id'      => 24,
-                'pincode'       => '625001'
-            ]);
+            Userprofile::updateOrCreate(
+                ['user_id' => $librarian->id],
+                [
+                    'school_id'     => $librarian->school_id,
+                    'usergroup_id'  => $librarian->usergroup_id,
+                    'firstname'     => 'librarian',
+                    'lastname'      => 'librarian',
+                    'profession'    => 'librarian',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
 
             $academicYear = AcademicYear::where([
                 ['school_id', $school->id],
@@ -74,113 +84,60 @@ class UsersSchoolAdminTableSeeder extends Seeder
             ])->first();
 
             if ($academicYear) {
-                TeacherProfile::factory()->create([
-                    'school_id'         => $librarian->school_id,
-                    'academic_year_id'  => $academicYear->id,
-                    'user_id'           => $librarian->id,
-                    'designation'       => 'librarian',
-                    'status'            => 1,
-                ]);
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $librarian->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $librarian->school_id,
+                        'designation'       => 'librarian',
+                        'status'            => 1,
+                    ]
+                );
             }
 
             // Receptionist
-            $receptionist = User::factory()->create([
-                'school_id'    => $school->id,
-                'name'         => 'receptionist' . $school->id,
-                'email'        => 'receptionist' . $school->id . '@mailinator.com',
-                'mobile_no'    => '2230456702',
-                'usergroup_id' => 10
-            ]);
+            $receptionist = User::firstOrCreate(
+                ['name' => 'receptionist' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'receptionist' . $school->id,
+                    'email'        => 'receptionist' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456702',
+                    'usergroup_id' => 10
+                ])
+            );
 
-            Userprofile::factory()->create([
-                'school_id'     => $receptionist->school_id,
-                'user_id'       => $receptionist->id,
-                'usergroup_id'  => $receptionist->usergroup_id,
-                'firstname'     => 'receptionist',
-                'lastname'      => 'receptionist',
-                'profession'    => 'others',
-                'address'       => 'Namakkal,Tamilnadu,India',
-                'country_id'    => 7,
-                'city_id'       => 31,
-                'state_id'      => 24,
-                'pincode'       => '625001'
-            ]);
+            Userprofile::updateOrCreate(
+                ['user_id' => $receptionist->id],
+                [
+                    'school_id'     => $receptionist->school_id,
+                    'usergroup_id'  => $receptionist->usergroup_id,
+                    'firstname'     => 'receptionist',
+                    'lastname'      => 'receptionist',
+                    'profession'    => 'others',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
 
             if ($academicYear) {
-                TeacherProfile::factory()->create([
-                    'school_id'         => $receptionist->school_id,
-                    'academic_year_id'  => $academicYear->id,
-                    'user_id'           => $receptionist->id,
-                    'designation'       => 'receptionist',
-                    'status'            => 1,
-                ]);
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $receptionist->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $receptionist->school_id,
+                        'designation'       => 'receptionist',
+                        'status'            => 1,
+                    ]
+                );
             }
 
             // Accountant
-            $accountant = User::factory()->create([
-                'school_id'    => $school->id,
-                'name'         => 'accountant' . $school->id,
-                'email'        => 'accountant' . $school->id . '@mailinator.com',
-                'mobile_no'    => '2230456703',
-                'usergroup_id' => 11
-            ]);
-
-            Userprofile::factory()->create([
-                'school_id'     => $accountant->school_id,
-                'user_id'       => $accountant->id,
-                'usergroup_id'  => $accountant->usergroup_id,
-                'firstname'     => 'accountant',
-                'lastname'      => 'accountant',
-                'profession'    => 'others',
-                'address'       => 'Namakkal,Tamilnadu,India',
-                'country_id'    => 7,
-                'city_id'       => 31,
-                'state_id'      => 24,
-                'pincode'       => '625001'
-            ]);
-
-            if ($academicYear) {
-                TeacherProfile::factory()->create([
-                    'school_id'         => $accountant->school_id,
-                    'academic_year_id'  => $academicYear->id,
-                    'user_id'           => $accountant->id,
-                    'designation'       => 'accountant',
-                    'status'            => 1,
-                ]);
-            }
-
-            // Stock Keeper
-            $stockKeeper = User::factory()->create([
-                'school_id'    => $school->id,
-                'name'         => 'stock_keeper' . $school->id,
-                'email'        => 'stock_keeper' . $school->id . '@mailinator.com',
-                'mobile_no'    => '2230456704',
-                'usergroup_id' => 12
-            ]);
-
-            Userprofile::factory()->create([
-                'school_id'     => $stockKeeper->school_id,
-                'user_id'       => $stockKeeper->id,
-                'usergroup_id'  => $stockKeeper->usergroup_id,
-                'firstname'     => 'stock_keeper',
-                'lastname'      => 'stock_keeper',
-                'profession'    => 'others',
-                'address'       => 'Namakkal,Tamilnadu,India',
-                'country_id'    => 7,
-                'city_id'       => 31,
-                'state_id'      => 24,
-                'pincode'       => '625001'
-            ]);
-
-            if ($academicYear) {
-                TeacherProfile::factory()->create([
-                    'school_id'         => $stockKeeper->school_id,
-                    'academic_year_id'  => $academicYear->id,
-                    'user_id'           => $stockKeeper->id,
-                    'designation'       => 'stock_keeper',
-                    'status'            => 1,
-                ]);
-            }
-        }
-    }
-}
+            $accountant
