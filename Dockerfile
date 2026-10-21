@@ -27,7 +27,7 @@ WORKDIR /var/www
 # Copy codebase
 COPY . /var/www
 
-# Install PHP dependencies (creates vendor directory)
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 # Set write permissions for Laravel storage & cache
@@ -39,5 +39,7 @@ COPY docker/nginx.conf /etc/nginx/sites-available/default
 
 EXPOSE 10000
 
-# Start PHP-FPM in the background and Nginx in the foreground
-CMD php-fpm -D && nginx -g 'daemon off;'
+# Remove any pre-existing environment or installed flag to force installer mode
+CMD rm -f /var/www/storage/installed /var/www/.env && \
+    php-fpm -D && \
+    nginx -g 'daemon off;'
