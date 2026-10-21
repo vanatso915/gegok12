@@ -11,13 +11,16 @@ class BookFactory extends Factory
 
     public function definition()
     {
+        static $faker;
+        $faker = $faker ?? \Faker\Factory::create();
+
         return [
             'category_id'   => rand(1, 10),
             'book_code'     => rand(1100000, 8899999),
-            'author'        => fake()->name,
-            'title'         => fake()->sentence(5),
+            'author'        => $faker->name,
+            'title'         => $faker->sentence(5),
             'availability'  => rand(5, 25),
-            'isbn_number'   => fake()->ean13(),
+            'isbn_number'   => $faker->ean13(),
             'cover_image'   => 'https://placeit/200x300',
         ];
     }
