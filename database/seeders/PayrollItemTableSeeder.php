@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class PayrollItemTableSeeder extends Seeder
@@ -14,61 +14,51 @@ class PayrollItemTableSeeder extends Seeder
      */
     public function run()
     {
+        $now = date("Y-m-d H:i:s");
 
-        DB::table('payroll_items')->insert([
-          
-            'name'              => 'Basic Salary',
-            'key'               => 'BA',
-            'type'              => 'defined',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
+        $payrollItems = [
+            [
+                'name' => 'Basic Salary',
+                'key'  => 'BA',
+                'type' => 'defined',
+            ],
+            [
+                'name' => 'Addition Allowance',
+                'key'  => 'AA',
+                'type' => 'earning',
+            ],
+            [
+                'name' => 'Deduction',
+                'key'  => 'DN',
+                'type' => 'deduction',
+            ],
+            [
+                'name' => 'Employees State Insurance',
+                'key'  => 'ESI',
+                'type' => 'deduction',
+            ],
+            [
+                'name' => 'Provident Fund',
+                'key'  => 'PF',
+                'type' => 'deduction',
+            ],
+            [
+                'name' => 'Income tax',
+                'key'  => 'IT',
+                'type' => 'deduction',
+            ],
+        ];
 
-        ]);
-
-        DB::table('payroll_items')->insert([
-          
-            'name'              => 'Addition Allowance',
-            'key'               => 'AA',
-            'type'              => 'earning',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
-         DB::table('payroll_items')->insert([
-          
-            'name'              => 'Deduction',
-            'key'               => 'DN',
-            'type'              => 'deduction',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
-         DB::table('payroll_items')->insert([
-          
-            'name'              => 'Employees State Insurance',
-            'key'               => 'ESI',
-            'type'              => 'deduction',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
-         DB::table('payroll_items')->insert([
-          
-            'name'              => 'Provident Fund',
-            'key'               => 'PF',
-            'type'              => 'deduction',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
-         DB::table('payroll_items')->insert([
-          
-            'name'              => 'Income tax',
-            'key'               => 'IT',
-            'type'              => 'deduction',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
+        foreach ($payrollItems as $item) {
+            DB::table('payroll_items')->updateOrInsert(
+                ['key' => $item['key']], // Unique lookup key
+                [
+                    'name'       => $item['name'],
+                    'type'       => $item['type'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+        }
     }
 }
