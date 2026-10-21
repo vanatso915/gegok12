@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use App\Models\School;
 
@@ -15,18 +15,24 @@ class BooksCategoryTableSeeder extends Seeder
      */
     public function run()
     {
-        $schools = School::where('status',1)->get();
+        $schools = School::where('status', 1)->get();
+        $categories = ['Astro Physics', 'Arts', 'Comics', 'Computer Science', 'History', 'Music', 'Technology', 'Magazines', 'Question Bank', 'Projects'];
+        $now = date("Y-m-d H:i:s");
+
         foreach ($schools as $school) 
         {
-            $categories = ['Astro Physics', 'Arts', 'Comics', 'Computer Science', 'History', 'Music', 'Technology', 'Magazines', 'Question Bank', 'Projects'];
             foreach ($categories as $category) 
             {
-                DB::table('books_category')->Insert([
-                    'school_id'        =>   $school->id,
-                    'category'         =>   $category,
-                    'created_at'       =>   date("Y-m-d H:i:s"),
-                    'updated_at'       =>   date("Y-m-d H:i:s"),
-                ]);
+                DB::table('books_category')->updateOrInsert(
+                    [
+                        'school_id' => $school->id,
+                        'category'  => $category,
+                    ],
+                    [
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
             }
         }
     }
