@@ -1,7 +1,8 @@
 FROM php:8.4-fpm
 
-# Install system dependencies
+# Install system dependencies & Nginx
 RUN apt-get update && apt-get install -y \
+    nginx \
     git \
     unzip \
     libzip-dev \
@@ -18,26 +19,22 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# ----------------------------
-# Install Node.js (LTS version)
-# ----------------------------
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs \
-    && node -v \
-    && npm -v
-
-# Install Composer
+# Copy Composer from official image
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
 WORKDIR /var/www
 
-# Fix Git "dubious ownership" issue automatically
-RUN git config --system --add safe.directory /var/www
+# Copy codebase
+COPY . /var/www
 
-# Ensure correct permissions for Laravel
+# Set write permissions for Laravel storage & cache
 RUN chown -R www-data:www-data /var/www \
-    && chmod -R 775 /var/www
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Switch to www-data user (recommended for Laravel)
-USER www-data
+# Remove default nginx config and copy custom one
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+
+EXPOSE 10000
+
+# Start PHP-FPM in background, then run Nginx in foreground to serve traffic
+CMD service php8.4-fpm start && nginx -g 'daemon off;'
