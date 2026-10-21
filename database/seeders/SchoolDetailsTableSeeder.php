@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use App\Models\School;
 
@@ -15,61 +15,63 @@ class SchoolDetailsTableSeeder extends Seeder
      */
     public function run()
     {
-        //
-        $schools = School::where('status',1)->get();
+        $schools = School::where('status', 1)->get();
+        $now = date("Y-m-d H:i:s");
 
-        foreach ($schools as $school) 
-        {
-            $keys = ['about_us' , 'admission_open' , 'admission_close_message' , 'admission_close_on' , 'affiliation_no' , 'affiliated_by' , 'date_of_establishment' , 'landline_no' , 'moto'  , 'website']; //'school_logo'
+        $keys = [
+            'about_us', 
+            'admission_open', 
+            'admission_close_message', 
+            'admission_close_on', 
+            'affiliation_no', 
+            'affiliated_by', 
+            'date_of_establishment', 
+            'landline_no', 
+            'moto', 
+            'website'
+        ];
 
-            foreach ($keys as $key)
-            {
-                DB::table('school_details')->Insert([
-                    'school_id'     =>  $school->id,
-                    'meta_key'      =>  $key,
-                    'meta_value'    =>  '-',
-                    'created_at'    =>  date("Y-m-d H:i:s"),
-                    'updated_at'    =>  date("Y-m-d H:i:s"),
-                ]);
+        // Default meta values for all active schools
+        foreach ($schools as $school) {
+            foreach ($keys as $key) {
+                DB::table('school_details')->updateOrInsert(
+                    [
+                        'school_id' => $school->id,
+                        'meta_key'  => $key,
+                    ],
+                    [
+                        'meta_value' => '-',
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
             }
         }
-        // DB::table('school_details')->Insert([
-        //     'school_id'     =>  '1',
-        //     'meta_key'      =>  'board',
-        //     'meta_value'    =>  'CBSE',
-        //     'created_at'    =>  date("Y-m-d H:i:s"),
-        //     'updated_at'    =>  date("Y-m-d H:i:s"),
-        // ]);
 
-        DB::table('school_details')->Insert([
-            'school_id'     =>  '1',
-            'meta_key'      =>  'board',
-            'meta_value'    =>  'matric',
-            'created_at'    =>  date("Y-m-d H:i:s"),
-            'updated_at'    =>  date("Y-m-d H:i:s"),
-        ]);
-        DB::table('school_details')->Insert([
-            'school_id'     =>  '1',
-            'meta_key'      =>  'school_logo',
-            'meta_value'    =>  '/uploads/demologo.png',
-            'created_at'    =>  date("Y-m-d H:i:s"),
-            'updated_at'    =>  date("Y-m-d H:i:s"),
-        ]);
+        // Specific overrides/additions for school_id => 1
+        $specificDetails = [
+            [
+                'meta_key'   => 'board',
+                'meta_value' => 'matric',
+            ],
+            [
+                'meta_key'   => 'school_logo',
+                'meta_value' => '/uploads/demologo.png',
+            ],
+        ];
 
-        // DB::table('school_details')->Insert([
-        //     'school_id'     =>  '2',
-        //     'meta_key'      =>  'board',
-        //     'meta_value'    =>  'State Board',
-        //     'created_at'    =>  date("Y-m-d H:i:s"),
-        //     'updated_at'    =>  date("Y-m-d H:i:s"),
-        // ]);
-
-        /*DB::table('school_details')->Insert([
-            'school_id'     =>  '3',
-            'meta_key'      =>  'board',
-            'meta_value'    =>  'Matriculation',
-            'created_at'    =>  date("Y-m-d H:i:s"),
-            'updated_at'    =>  date("Y-m-d H:i:s"),
-        ]);*/
+        foreach ($specificDetails as $detail) {
+            DB::table('school_details')->updateOrInsert(
+                [
+                    'school_id' => 1,
+                    'meta_key'  => $detail['meta_key'],
+                ],
+                [
+                    'meta_value' => $detail['meta_value'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+        }
     }
 }
