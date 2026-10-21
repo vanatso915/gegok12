@@ -39,7 +39,7 @@ return [
             'prefix' => '',
         ],
 
-        'mysql' => [
+     'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
@@ -52,6 +52,10 @@ return [
             'prefix' => '',
             'strict' => false,
             'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA', '/etc/ssl/certs/ca-certificates.crt'),
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_require_primary_key=0;",
+            ]) : [],
         ],
 
         'pgsql' => [
