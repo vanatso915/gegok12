@@ -15,6 +15,7 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     libicu-dev \
     libssl-dev \
+    ca-certificates \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd intl \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -39,8 +40,7 @@ COPY docker/nginx.conf /etc/nginx/sites-available/default
 
 EXPOSE 10000
 
-# Start PHP-FPM and Nginx immediately for Render's port detection,
-# then run database migrations & seeding in the background.
-CMD php-fpm -D && \
-    (php artisan migrate --force && php artisan db:seed --force && touch /var/www/storage/installed) & \
+# Remove any previous installation lock files and start web server
+CMD rm -f /var/www/storage/installed /var/www/.env && \
+    php-fpm -D && \
     nginx -g 'daemon off;'
