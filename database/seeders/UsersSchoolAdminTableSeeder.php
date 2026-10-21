@@ -81,8 +81,8 @@ class UsersSchoolAdminTableSeeder extends Seeder
 
         foreach ($schools as $school) 
         {
-            //admin
-           $schoolAdmin = User::factory()->create([
+          //admin
+$schoolAdmin = User::factory()->create([
     'school_id'    => $school->id,
     'name'         => 'demoschool'.$school->id,
     'email'        => 'demoschool'.$school->id.'@mailinator.com',
@@ -90,19 +90,19 @@ class UsersSchoolAdminTableSeeder extends Seeder
     'usergroup_id' => 3
 ]);
 
-            Userprofile::factory()->create([
-                'school_id'     =>  $school->id,
-                'user_id'       =>  $schoolAdmin->id,
-                'usergroup_id'  =>  3,
-                'firstname'     =>  'demo',
-                'lastname'      =>  'school',
-                'profession'    =>  'admin',
-                'address'       =>  'Namakkal,Tamilnadu,India',
-                'country_id'    =>  7,
-                'city_id'       =>  31,
-                'state_id'      =>  24,
-                'pincode'       =>  '625001'
-            ]);
+Userprofile::factory()->create([
+    'school_id'     => $school->id,
+    'user_id'       => $schoolAdmin->id,
+    'usergroup_id'  => 3,
+    'firstname'     => 'demo',
+    'lastname'      => 'school',
+    'profession'    => 'admin',
+    'address'       => 'Namakkal,Tamilnadu,India',
+    'country_id'    => 7,
+    'city_id'       => 31,
+    'state_id'      => 24,
+    'pincode'       => '625001'
+]);
 
             //librarian
             $librarian =  User::factory()->create([
