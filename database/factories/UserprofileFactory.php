@@ -1,7 +1,7 @@
 <?php
+
 namespace Database\Factories;
 
-use Faker\Generator as Faker;
 use Carbon\Carbon;
 use App\Models\Standard;
 use App\Models\Userprofile;
@@ -11,68 +11,43 @@ class UserprofileFactory extends Factory
 {
     protected $model = Userprofile::class;
 
-   public function definition()
+    public function definition()
     {
-    $alternate_no = $this->faker->unique()->numerify('#########');
+        $gender = $this->faker->randomElement(['male', 'female']);
+        
+        $avatar = $gender === 'male' ? 'uploads/male.png' : 'uploads/female.png';
 
-    $gender = $this->faker->randomElement(['male', 'female']);
+        // Pair cities with their corresponding IDs properly
+        $locations = [
+            ['city' => 'Bangalore', 'city_id' => '12', 'state_id' => '12'],
+            ['city' => 'Chennai', 'city_id' => '24', 'state_id' => '24'],
+            ['city' => 'Hyderabad', 'city_id' => '25', 'state_id' => '25'],
+            ['city' => 'Mumbai', 'city_id' => '15', 'state_id' => '15'],
+            ['city' => 'Thiruvananthapuram', 'city_id' => '13', 'state_id' => '13'],
+        ];
+        
+        $location = $this->faker->randomElement($locations);
 
-    $date_of_birth = $this->faker->dateTimeBetween($startDate = '-18 years', $endDate = '-5 years', $timezone = null);
-
-    $blood_group = $this->faker->randomElement(['a+','b+','o+','ab+','a-','b-','o-','ab-']);
-
-    $mother_tongue = $this->faker->randomElement(['Tamil','Malayalam','Telugu','Kannada','Hindi']);
-
-    $caste = $this->faker->randomElement(['BC','BCM','FC','MBC','OBC','Others','SC','SCA','ST']);
-
-    $city = $this->faker->randomElement(['Bangalore' , 'Chennai' , 'Hyderabad' , 'Mumbai' , 'Thiruvananthapuram']);
-
-    $city_id = $this->faker->randomElement(['12' , '24' , '25' , '15' , '13']);
-
-    $state_id = $this->faker->randomElement(['12' , '24' , '25' ,  '15' , '13']);
-
-    $pincode = $this->faker->unique()->numerify('######');
-
-    $registration_number = $this->faker->unique()->numerify('######');
-
-    $EMIS_number = $this->faker->unique()->numerify('######');
-
-    $joining_date = $this->faker->dateTimeBetween($startDate = '-4 years', $endDate = '-2 years', $timezone = null);
-
-    if($gender == 'male')
-    {
-        $avatar = "uploads/male.png";
+        return [
+            'firstname'           => $this->faker->firstName,
+            'lastname'            => $this->faker->lastName,
+            'alternate_no'        => $this->faker->unique()->numerify('#########'),
+            'gender'              => $gender,
+            'date_of_birth'       => $this->faker->dateTimeBetween('-18 years', '-5 years'),
+            'blood_group'         => $this->faker->randomElement(['a+', 'b+', 'o+', 'ab+', 'a-', 'b-', 'o-', 'ab-']),
+            'birth_place'         => $location['city'],
+            'native_place'        => $location['city'],
+            'mother_tongue'       => $this->faker->randomElement(['Tamil', 'Malayalam', 'Telugu', 'Kannada', 'Hindi']),
+            'caste'               => $this->faker->randomElement(['BC', 'BCM', 'FC', 'MBC', 'OBC', 'Others', 'SC', 'SCA', 'ST']),
+            'address'             => $this->faker->address,
+            'city_id'             => $location['city_id'],
+            'state_id'            => $location['state_id'],
+            'country_id'          => 7,
+            'pincode'             => $this->faker->unique()->numerify('######'),
+            'registration_number' => $this->faker->unique()->numerify('######'),
+            'EMIS_number'         => $this->faker->unique()->numerify('######'),
+            'joining_date'        => $this->faker->dateTimeBetween('-4 years', '-2 years'),
+            'avatar'              => $avatar,
+        ];
     }
-    elseif($gender == 'female')
-    {
-        $avatar = "uploads/female.png";
-    }
-
-    $this->faker->addProvider(new \Faker\Provider\en_US\Text($this->faker));
-
-    return [
-        'firstname'             =>  $this->faker->firstName,
-        'lastname'              =>  $this->faker->lastName,
-        'alternate_no'          =>  $alternate_no,
-        'gender'                =>  $gender,
-        'date_of_birth'         =>  $date_of_birth, 
-        'blood_group'           =>  $blood_group,
-        'birth_place'           =>  $city,
-        'native_place'          =>  $city,
-        'mother_tongue'         =>  $mother_tongue,
-        'caste'                 =>  $caste,
-        'address'               =>  $this->faker->address,
-        'city_id'               =>  $city_id,
-        'state_id'              =>  $state_id,
-        'country_id'            =>  7,
-        'pincode'               =>  $pincode, 
-        'registration_number'   =>  $registration_number,
-        'EMIS_number'           =>  $EMIS_number,
-        'joining_date'          =>  $joining_date,
-        'avatar'                =>  $avatar,
-    ];
-
 }
-
-}
-
