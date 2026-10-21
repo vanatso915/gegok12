@@ -39,7 +39,9 @@ COPY docker/nginx.conf /etc/nginx/sites-available/default
 
 EXPOSE 10000
 
-# Remove any pre-existing environment or installed flag to force installer mode
-CMD rm -f /var/www/storage/installed /var/www/.env && \
+# Run migrations, seed the database, mark installation complete, and start services
+CMD php artisan migrate --force && \
+    php artisan db:seed --force && \
+    touch /var/www/storage/installed && \
     php-fpm -D && \
     nginx -g 'daemon off;'
