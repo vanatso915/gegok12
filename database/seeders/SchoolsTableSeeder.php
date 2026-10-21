@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class SchoolsTableSeeder extends Seeder
@@ -14,27 +14,42 @@ class SchoolsTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('schools')->Insert([
-            'id'           =>  '1',
-            'name'         =>  'Demo School',
-            'email'        =>  'demoschool@gegok12.com',
-            'phone'        =>  '9500979461',
-            'status'       =>  '1',
-            'slug'         =>  'demo-school',
-            'created_at'   =>   date("Y-m-d H:i:s"),
-            'updated_at'   =>   date("Y-m-d H:i:s"),
-        ]);
+        $now = date("Y-m-d H:i:s");
 
+        $schools = [
+            [
+                'id'         => 1,
+                'name'       => 'Demo School',
+                'email'      => 'demoschool@gegok12.com',
+                'phone'      => '9500979461',
+                'status'     => '1',
+                'slug'       => 'demo-school',
+            ],
+            /*
+            [
+                'id'         => 2,
+                'name'       => 'Model School Two',
+                'email'      => 'modelschool2@gegok12.com',
+                'phone'      => '8999911112',
+                'status'     => '1',
+                'slug'       => 'model-school-two',
+            ],
+            */
+        ];
 
-        // DB::table('schools')->Insert([
-        //     'id'           =>  '2',
-        //     'name'         =>  'Model School Two',
-        //     'email'        =>  'modelschool2@gegok12.com',
-        //     'phone'        =>  '8999911112',
-        //     'status'       =>  '1',
-        //     'slug'         =>  'model-school-two',
-        //     'created_at'   =>   date("Y-m-d H:i:s"),
-        //     'updated_at'   =>   date("Y-m-d H:i:s"),
-        // ]);
+        foreach ($schools as $school) {
+            DB::table('schools')->updateOrInsert(
+                ['id' => $school['id']], // Unique lookup key
+                [
+                    'name'       => $school['name'],
+                    'email'      => $school['email'],
+                    'phone'      => $school['phone'],
+                    'status'     => $school['status'],
+                    'slug'       => $school['slug'],
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+        }
     }
 }
