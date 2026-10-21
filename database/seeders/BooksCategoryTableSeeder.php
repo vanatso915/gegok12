@@ -16,13 +16,22 @@ class BooksCategoryTableSeeder extends Seeder
     public function run()
     {
         $schools = School::where('status', 1)->get();
-        $categories = ['Astro Physics', 'Arts', 'Comics', 'Computer Science', 'History', 'Music', 'Technology', 'Magazines', 'Question Bank', 'Projects'];
+        $categories = [
+            'Astro Physics', 
+            'Arts', 
+            'Comics', 
+            'Computer Science', 
+            'History', 
+            'Music', 
+            'Technology', 
+            'Magazines', 
+            'Question Bank', 
+            'Projects'
+        ];
         $now = date("Y-m-d H:i:s");
 
-        foreach ($schools as $school) 
-        {
-            foreach ($categories as $category) 
-            {
+        foreach ($schools as $school) {
+            foreach ($categories as $category) {
                 DB::table('books_category')->updateOrInsert(
                     [
                         'school_id' => $school->id,
