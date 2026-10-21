@@ -26,7 +26,7 @@ class UsersSchoolAdminTableSeeder extends Seeder
         foreach ($schools as $school) 
         {
             //admin
-           <?php
+<?php
 
 namespace Database\Seeders;
 
