@@ -24,7 +24,7 @@ class UsersStudentTableSeeder extends Seeder
      */
     public function run()
     {
-        // 💡 物理安全放行：直接清空此 Seeder 的測試資料填入邏輯，徹底阻斷 randomElement() On Null 的 Bug 崩潰！
+        // 💡物理安全放行：直接清空此 Seeder 的測試資料填入邏輯，徹底阻斷 randomElement() On Null 的 Bug 崩潰！
         // 這樣就不會踩到原廠 Faker 套件在雲端環境未正確加載的核心地雷。
         return;
     }
