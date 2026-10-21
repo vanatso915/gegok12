@@ -27,6 +27,9 @@ WORKDIR /var/www
 # Copy codebase
 COPY . /var/www
 
+# Install PHP dependencies (creates vendor directory)
+RUN composer install --no-dev --optimize-autoloader
+
 # Set write permissions for Laravel storage & cache
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
