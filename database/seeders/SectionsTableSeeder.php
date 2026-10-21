@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use App\Models\School;
 
@@ -15,21 +15,25 @@ class SectionsTableSeeder extends Seeder
      */
     public function run()
     {
-        $schools = School::where('status',1)->get();
+        $schools = School::where('status', 1)->get();
+        $now = date("Y-m-d H:i:s");
+        $sections = ['A', 'B'];
 
         foreach ($schools as $school) 
         {
-            $sections = ['A', 'B'];
-
             foreach ($sections as $section) 
             {
-                DB::table('sections')->Insert([
-                    'school_id'    =>  $school->id,
-                    'name'         =>  $section,
-                    'status'       =>  '1',
-                    'created_at'   =>   date("Y-m-d H:i:s"),
-                    'updated_at'   =>   date("Y-m-d H:i:s"),
-                ]);
+                DB::table('sections')->updateOrInsert(
+                    [
+                        'school_id' => $school->id,
+                        'name'      => $section,
+                    ],
+                    [
+                        'status'     => '1',
+                        'created_at' => $now,
+                        'updated_at' => $now,
+                    ]
+                );
             }
         }
     }
