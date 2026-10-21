@@ -140,4 +140,48 @@ class UsersSchoolAdminTableSeeder extends Seeder
             }
 
             // Accountant
-            $accountant
+            $accountant = User::firstOrCreate(
+                ['name' => 'accountant' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'accountant' . $school->id,
+                    'email'        => 'accountant' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456703',
+                    'usergroup_id' => 11
+                ])
+            );
+
+            Userprofile::updateOrCreate(
+                ['user_id' => $accountant->id],
+                [
+                    'school_id'     => $accountant->school_id,
+                    'usergroup_id'  => $accountant->usergroup_id,
+                    'firstname'     => 'accountant',
+                    'lastname'      => 'accountant',
+                    'profession'    => 'others',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
+
+            if ($academicYear) {
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $accountant->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $accountant->school_id,
+                        'designation'       => 'accountant',
+                        'status'            => 1,
+                    ]
+                );
+            }
+
+            // Stock Keeper
+            $stockKeeper = User::firstOrCreate(
+                ['name' => 'stock_keeper' . $school->id],
+                array_
