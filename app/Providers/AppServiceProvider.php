@@ -117,10 +117,8 @@ class AppServiceProvider extends ServiceProvider {
         }
         //
 
-        // Skip database operations if app is not installed yet
-        if ( !file_exists( storage_path( 'installed' ) ) || !file_exists( base_path( '.env' ) ) ) {
-            return;
-        }
+        // 💡 【物理硬解鎖】：這裡原本固執的 file_exists('installed') 阻擋檢查已被我們完全刪除！
+        // 系統會被強迫直接去載入並讀取你那早就灌好資料的 settings 資料表。
 
         if ( !\App::runningInConsole() && count( Schema::getColumnListing( 'settings' ) ) ) {
 
