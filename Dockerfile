@@ -31,10 +31,10 @@ COPY . /var/www
 RUN chown -R www-data:www-data /var/www \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Remove default nginx config and copy custom one
+# Copy custom Nginx configuration pointing to public folder
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 
 EXPOSE 10000
 
-# Start PHP-FPM in background, then run Nginx in foreground to serve traffic
-CMD service php8.4-fpm start && nginx -g 'daemon off;'
+# Start PHP-FPM in the background and Nginx in the foreground
+CMD php-fpm -D && nginx -g 'daemon off;'
