@@ -39,9 +39,8 @@ COPY docker/nginx.conf /etc/nginx/sites-available/default
 
 EXPOSE 10000
 
-# Run migrations, seed the database, mark installation complete, and start services
-CMD php artisan migrate --force && \
-    php artisan db:seed --force && \
-    touch /var/www/storage/installed && \
-    php-fpm -D && \
+# Start PHP-FPM and Nginx immediately for Render's port detection,
+# then run database migrations & seeding in the background.
+CMD php-fpm -D && \
+    (php artisan migrate --force && php artisan db:seed --force && touch /var/www/storage/installed) & \
     nginx -g 'daemon off;'
