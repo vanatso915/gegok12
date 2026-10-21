@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class PlansTableSeeder extends Seeder
@@ -16,22 +16,26 @@ class PlansTableSeeder extends Seeder
      */
     public function run()
     {
+        $now = date("Y-m-d H:i:s");
+
         // Single unlimited plan for open-source version
-        DB::table('plans')->insert([
-            'cycle'             => '36500', // 100 years
-            'name'              => 'unlimited',
-            'display_name'      => 'UNLIMITED',
-            'amount'            => '0',
-            'no_of_members'     => '999999',
-            'no_of_events'      => '999999',
-            'no_of_folders'     => '999999',
-            'no_of_files'       => '999999',
-            'no_of_videos'      => '999999',
-            'no_of_bulletins'   => '999999',
-            'no_of_groups'      => '999999',
-            'is_active'         => 1,
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"),
-        ]);
+        DB::table('plans')->updateOrInsert(
+            ['name' => 'unlimited'], // Unique lookup key
+            [
+                'cycle'           => '36500', // 100 years
+                'display_name'    => 'UNLIMITED',
+                'amount'          => '0',
+                'no_of_members'   => '999999',
+                'no_of_events'    => '999999',
+                'no_of_folders'   => '999999',
+                'no_of_files'     => '999999',
+                'no_of_videos'    => '999999',
+                'no_of_bulletins' => '999999',
+                'no_of_groups'    => '999999',
+                'is_active'       => 1,
+                'created_at'      => $now,
+                'updated_at'      => $now,
+            ]
+        );
     }
 }
