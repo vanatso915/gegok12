@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 use App\Models\AcademicYear;
-use App\Helpers\SiteHelper;
 use App\Models\School;
 
 class HolidaySeeder extends Seeder
@@ -17,7 +16,6 @@ class HolidaySeeder extends Seeder
      */
     public function run()
     {
-        //
         $schools = School::where('status', 1)->get();
 
         $holidays_2026 = [
@@ -64,6 +62,8 @@ class HolidaySeeder extends Seeder
             ['Christmas', '2027-12-25', '2027-12-25'],
         ];
 
+        $now = now();
+
         foreach ($schools as $school) {
 
             $academic_year = AcademicYear::where([
@@ -71,21 +71,30 @@ class HolidaySeeder extends Seeder
                 ['status', 1]
             ])->first();
 
+            // Skip this school if no active academic year is found
+            if (!$academic_year) {
+                continue;
+            }
+
             foreach ([$holidays_2026, $holidays_2027] as $yearHolidays) {
                 foreach ($yearHolidays as $h) {
-                    DB::table('events')->insert([
-                        'school_id' => $school->id,
-                        'academic_year_id' => $academic_year->id,
-                        'select_type' => 'school',
-                        'title' => $h[0],
-                        'category' => 'holidays',
-                        'start_date' => $h[1] . ' 00:00:00',
-                        'end_date' => $h[2] . ' 00:00:00',
-                        'created_at' => now(),
-                        'updated_at' => now()
-                    ]);
+                    DB::table('events')->updateOrInsert(
+                        [
+                            'school_id'  => $school->id,
+                            'title'      => $h[0],
+                            'start_date' => $h[1] . ' 00:00:00',
+                        ],
+                        [
+                            'academic_year_id' => $academic_year->id,
+                            'select_type'      => 'school',
+                            'category'         => 'holidays',
+                            'end_date'         => $h[2] . ' 00:00:00',
+                            'created_at'       => $now,
+                            'updated_at'       => $now,
+                        ]
+                    );
                 }
             }
-        }       
+        }        
     }
 }
