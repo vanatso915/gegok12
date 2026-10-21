@@ -39,7 +39,7 @@ return [
             'prefix' => '',
         ],
 
-   'mysql' => [
+  'mysql' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
@@ -54,7 +54,31 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 PDO::MYSQL_ATTR_INIT_COMMAND => "SET SESSION sql_require_primary_key=0;",
-                PDO::MYSQL_ATTR_SSL_CA => realpath(base_path('aiven-ca.crt')) ?: base_path('aiven-ca.crt'),
+                PDO::MYSQL_ATTR_SSL_CA => "-----BEGIN CERTIFICATE-----\n" .
+                    "MIIERDCCAqygAwIBAgIUbUfpqr9CuPSX04Hd1ArV+Cleg60wDQYJKoZIhvcNAQEM\n" .
+                    "BQAwOjE4MDYGA1UEAwwvYjQ2M2ZlNzQtZWNmMS00MTEwLWFiZWEtOWU5YmQ3ODU0\n" .
+                    "NGZjIFByb2plY3QgQ0EwHhcNMjYxMDIxMDMyNjA4WhcNMzYxMDE4MDMyNjA4WjA6\n" .
+                    "MTgwNgYDVQQDDC9iNDYzZmU3NC1lY2YxLTQxMTAtYWJlYS05ZTliZDc4NTQ0ZmMg\n" .
+                    "UHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCCAYoCggGBAKFX3jHl\n" .
+                    "25YAJbEjz0Wc7e7rmkt5IGf/CqE6OmG7wB+5XgEwnMIBcNSVcBsVki+tecW21RSQ\n" .
+                    "V1KyajOeNLddTxnaq5teC0BfL3k5RLg61ouXFyyRPFEn8Qsgubm+VSBai64y8AE9\n" .
+                    "62cAduDY1+HcIcvA1TWr6zVIDadgFHHlYef/bAw6wA4nWHI504R6seuXae+16nh5\n" .
+                    "59BLPeOyPFMYiu+igiC97rQnISk9hDKyBXiIh7cJ1CIE7FAJWVZmbfqHxjdjJVkr\n" .
+                    "ua95+6GGYH0a6qGeIAUM9w8ay1B4hHSyIOTPuNIHSZ/Pjn9ErLhRFAB+zbjm7FfJ\n" .
+                    "hd6rwo5t1H3riU2ORtntcbLYlRkYqFIw6jUJgdg8MCSaBSR94PuZmv1toSn+inTO\n" .
+                    "+7syYpjKKK6TxEDpNYIvtLHgeMPYuCXAfIyfMwyjjGd0KqzmiiGda55SV9XpIw1o\n" .
+                    "zN2gAOm0z6FAR1uwTmjTQlLI7KSkJWgjJ+Vg645iNfy0ga7NJnbQByzByQIDAQAB\n" .
+                    "o0IwQDAdBgNVHQ4EFgQUzLdKB+olpUjmddFWUz4kB8aFp8IwEgYDVR0TAQH/BAgw\n" .
+                    "BgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGBAJUIpY3RdRGg\n" .
+                    "sp5OgAV5YQf01WRtb3KVNj5pmlnR81tYPV9sjrwFnQ0xAkZx0h/MRTc5WHr8l2pU\n" .
+                    "+l2H0+ksAE30gN1marGgngmwe7Zb+zOSECgvjkfqgGZGa5xyOHFIkA9yiSAxE8QT\n" .
+                    "TMcN7AtYjpomgXxvtz+YE1JDcxRKOZnx2OH1bsOXhK3H+c7vh/d7BsudyxqXiWHG\n" .
+                    "cqqZzu1+6ErXiQ8OxaXLb9o2dgAWKMu1U1gl7VrcOjhS1x7A0Q9L8ij2YRO40akJ\n" .
+                    "9yvTRCRPhL2O+GCgRVKInLYKOstkFxKRT6mNSMjCnAAm1KDPetoxhUQ12gOZpimv\n" .
+                    "8xaEyV00G+tlU7L5ajef8b0s7NQRWfodaw6w9u/6pAO1Lc6WnpI5On1N9kUFfGMA\n" .
+                    "JMdFChr80f27s987KHy+4PQoNRIvBGRl/6idUELBS5eWDCe+x9+kRq0iYRdvZawe\n" .
+                    "on9ndMM7MoKbTNsDe4ngbMjisuOmdiIkbhOSpyK9n2raKD9IXW25oA==\n" .
+                    "-----END CERTIFICATE-----",
             ]) : [],
         ],
     
