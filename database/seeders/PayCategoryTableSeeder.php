@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Seeder;
 
 class PayCategoryTableSeeder extends Seeder
@@ -14,40 +14,24 @@ class PayCategoryTableSeeder extends Seeder
      */
     public function run()
     {
-         DB::table('pay_categories')->insert([
-          
-            'name'             => 'Not Applicable',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
+        $now = date("Y-m-d H:i:s");
 
-        ]);
-          DB::table('pay_categories')->insert([
-          
-            'name'             => 'User Defined',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
+        $payCategories = [
+            'Not Applicable',
+            'User Defined',
+            'On Attendance',
+            'Computation',
+            // 'Flat Rate', // Left commented out as in your original code
+        ];
 
-        ]);
-          DB::table('pay_categories')->insert([
-          
-            'name'             => 'On Attendance',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
-           DB::table('pay_categories')->insert([
-          
-            'name'             => 'Computation',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);
-            /*DB::table('pay_categories')->insert([
-          
-            'name'             => 'Flat Rate',
-            'created_at'        => date("Y-m-d H:i:s"),
-            'updated_at'        => date("Y-m-d H:i:s"), 
-
-        ]);*/
+        foreach ($payCategories as $category) {
+            DB::table('pay_categories')->updateOrInsert(
+                ['name' => $category],
+                [
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ]
+            );
+        }
     }
 }
