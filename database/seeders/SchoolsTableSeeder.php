@@ -39,7 +39,7 @@ class SchoolsTableSeeder extends Seeder
 
         foreach ($schools as $school) {
             DB::table('schools')->updateOrInsert(
-                ['id' => $school['id']], // Unique lookup key
+                ['id' => $school['id']], // Match condition by primary key
                 [
                     'name'       => $school['name'],
                     'email'      => $school['email'],
