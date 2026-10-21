@@ -20,7 +20,7 @@ class UsersSchoolAdminTableSeeder extends Seeder
     {
         $schools = School::where('status', 1)->get();
 
-        foreach ($schools as$school) {
+        foreach ($schools as $school) {
 
             // Admin
             $schoolAdmin = User::firstOrCreate(
@@ -84,4 +84,144 @@ class UsersSchoolAdminTableSeeder extends Seeder
             ])->first();
 
             if ($academicYear) {
-                TeacherProfile::update
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $librarian->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $librarian->school_id,
+                        'designation'       => 'librarian',
+                        'status'            => 1,
+                    ]
+                );
+            }
+
+            // Receptionist
+            $receptionist = User::firstOrCreate(
+                ['name' => 'receptionist' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'receptionist' . $school->id,
+                    'email'        => 'receptionist' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456702',
+                    'usergroup_id' => 10
+                ])
+            );
+
+            Userprofile::updateOrCreate(
+                ['user_id' => $receptionist->id],
+                [
+                    'school_id'     => $receptionist->school_id,
+                    'usergroup_id'  => $receptionist->usergroup_id,
+                    'firstname'     => 'receptionist',
+                    'lastname'      => 'receptionist',
+                    'profession'    => 'others',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
+
+            if ($academicYear) {
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $receptionist->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $receptionist->school_id,
+                        'designation'       => 'receptionist',
+                        'status'            => 1,
+                    ]
+                );
+            }
+
+            // Accountant
+            $accountant = User::firstOrCreate(
+                ['name' => 'accountant' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'accountant' . $school->id,
+                    'email'        => 'accountant' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456703',
+                    'usergroup_id' => 11
+                ])
+            );
+
+            Userprofile::updateOrCreate(
+                ['user_id' => $accountant->id],
+                [
+                    'school_id'     => $accountant->school_id,
+                    'usergroup_id'  => $accountant->usergroup_id,
+                    'firstname'     => 'accountant',
+                    'lastname'      => 'accountant',
+                    'profession'    => 'others',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
+
+            if ($academicYear) {
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $accountant->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $accountant->school_id,
+                        'designation'       => 'accountant',
+                        'status'            => 1,
+                    ]
+                );
+            }
+
+            // Stock Keeper
+            $stockKeeper = User::firstOrCreate(
+                ['name' => 'stock_keeper' . $school->id],
+                array_merge(User::factory()->raw(), [
+                    'school_id'    => $school->id,
+                    'name'         => 'stock_keeper' . $school->id,
+                    'email'        => 'stock_keeper' . $school->id . '@mailinator.com',
+                    'mobile_no'    => '2230456704',
+                    'usergroup_id' => 12
+                ])
+            );
+
+            Userprofile::updateOrCreate(
+                ['user_id' => $stockKeeper->id],
+                [
+                    'school_id'     => $stockKeeper->school_id,
+                    'usergroup_id'  => $stockKeeper->usergroup_id,
+                    'firstname'     => 'stock_keeper',
+                    'lastname'      => 'stock_keeper',
+                    'profession'    => 'others',
+                    'address'       => 'Namakkal,Tamilnadu,India',
+                    'country_id'    => 7,
+                    'city_id'       => 31,
+                    'state_id'      => 24,
+                    'pincode'       => '625001'
+                ]
+            );
+
+            if ($academicYear) {
+                TeacherProfile::updateOrCreate(
+                    [
+                        'user_id'          => $stockKeeper->id,
+                        'academic_year_id' => $academicYear->id
+                    ],
+                    [
+                        'school_id'         => $stockKeeper->school_id,
+                        'designation'       => 'stock_keeper',
+                        'status'            => 1,
+                    ]
+                );
+            }
+        }
+    }
+}
