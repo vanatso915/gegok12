@@ -11,8 +11,7 @@ class BookFactory extends Factory
 
     public function definition()
     {
-        static $faker;
-        $faker = $faker ?? \Faker\Factory::create();
+        $faker = app(\Faker\Generator::class);
 
         return [
             'category_id'   => rand(1, 10),
