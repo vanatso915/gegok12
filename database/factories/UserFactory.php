@@ -35,12 +35,11 @@ class UserFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition()
+   public function definition()
     {
         $first = $this->faker->firstName;
         $last  = $this->faker->lastName;
-        $uniqueId = $this->faker->unique()->numberBetween(1000, 9999);
-
+        $uniqueId = rand(1000, 9999);
 
         // Ensure a default usergroup exists
         $defaultUsergroup = Usergroup::firstOrCreate(
@@ -51,11 +50,11 @@ class UserFactory extends Factory
         return [
             'name' => $first . ' ' . $last . $uniqueId,
             'email' => strtolower($first . $last . $uniqueId) . '@mailinator.com',
-            'mobile_no' => $this->faker->unique()->numerify('##########'),
+            'mobile_no' => '9' . rand(100000000, 999999999),
             'password' => bcrypt('password'),
-            'email_verification_code' => str_random(40),
-            'registration_number' => $this->faker->unique()->numerify('######'),
-            'remember_token' => str_random(10),
+            'email_verification_code' => \Illuminate\Support\Str::random(40),
+            'registration_number' => rand(100000, 999999),
+            'remember_token' => \Illuminate\Support\Str::random(10),
             'usergroup_id' => $defaultUsergroup->id,
             'status' => 'active',
             'email_verified' => true,
