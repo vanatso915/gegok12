@@ -32,14 +32,17 @@ class StandardsLinkTableSeeder extends Seeder
                 // Fetch teachers (usergroup_id = 5)
                 $teachers = User::where([['school_id', $school->id], ['usergroup_id', 5]])->pluck('id')->toArray();
 
-                // Fallback: If no teachers found with group 5, grab any user from this school so seeding doesn't fail
+                // SELF-HEALING: If no teachers exist, create a fallback teacher on the fly
                 if (empty($teachers)) {
-                    $teachers = User::where('school_id', $school->id)->pluck('id')->toArray();
-                }
-
-                // If still completely empty, skip this school
-                if (empty($teachers)) {
-                    continue;
+                    $fallbackTeacher = User::create([
+                        'school_id'    => $school->id,
+                        'usergroup_id' => 5,
+                        'name'         => 'Default Teacher',
+                        'email'        => 'teacher_' . $school->id . '@mailinator.com',
+                        'password'     => bcrypt('password'),
+                        'status'       => 1,
+                    ]);
+                    $teachers = [$fallbackTeacher->id];
                 }
 
                 foreach ($standards as $stdKey => $standard)
@@ -47,7 +50,9 @@ class StandardsLinkTableSeeder extends Seeder
                     foreach ($sections as $secKey => $section)
                     {
                         $academic_year = SiteHelper::getAcademicyear($school->id);
-                        $sectionRef = ($stdKey * $sections->count() + $secKey) % count($teachers); // Prevent out-of-bounds error
+                        
+                        // Safe modulo indexing in case there are more sections than teachers
+                        $sectionRef = ($stdKey * $sections->count() + $secKey) % count($teachers);
                         $teacherId = $teachers[$sectionRef];
 
                         StandardLink::factory(1)->create([
@@ -58,7 +63,7 @@ class StandardsLinkTableSeeder extends Seeder
                             'class_teacher_id'  => $teacherId
                         ]);
 
-                        RoleUser::factory(1)->create([
+                        RoleUser::firstOrCreate([
                             'user_id'   => $teacherId,
                             'role_id'   => 4, 
                         ]);
