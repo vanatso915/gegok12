@@ -21,35 +21,46 @@ class StandardsLinkTableSeeder extends Seeder
      */
     public function run()
     {
-        //
         if (env('APP_ENV') == 'local' || env('APP_ENV') == 'development') 
         {
-
-            $schools = School::where('status',1)->get();
+            $schools = School::where('status', 1)->get();
             foreach ($schools as $school) 
             {
-                $standards = Standard::where('school_id',$school->id)->get();
-                $sections = Section::where('school_id',$school->id)->get();
-                $teachers = User::where([['school_id',$school->id],['usergroup_id', 5]])->pluck('id')->toArray();
+                $standards = Standard::where('school_id', $school->id)->get();
+                $sections = Section::where('school_id', $school->id)->get();
+                
+                // Fetch teachers (usergroup_id = 5)
+                $teachers = User::where([['school_id', $school->id], ['usergroup_id', 5]])->pluck('id')->toArray();
 
-                foreach($standards as $stdKey => $standard)
+                // Fallback: If no teachers found with group 5, grab any user from this school so seeding doesn't fail
+                if (empty($teachers)) {
+                    $teachers = User::where('school_id', $school->id)->pluck('id')->toArray();
+                }
+
+                // If still completely empty, skip this school
+                if (empty($teachers)) {
+                    continue;
+                }
+
+                foreach ($standards as $stdKey => $standard)
                 {
                     foreach ($sections as $secKey => $section)
                     {
                         $academic_year = SiteHelper::getAcademicyear($school->id);
-                        $sectionRef = $stdKey * $sections->count() + $secKey + 1;
-                        StandardLink::factory(1)->create([
+                        $sectionRef = ($stdKey * $sections->count() + $secKey) % count($teachers); // Prevent out-of-bounds error
+                        $teacherId = $teachers[$sectionRef];
 
-                            'school_id'         =>  $standard->school_id,
-                            'academic_year_id'  =>  $academic_year->id,
-                            'standard_id'       =>  $standard->id,
-                            'section_id'        =>  $section->id,
-                            'class_teacher_id'  =>  $teachers[$sectionRef]
+                        StandardLink::factory(1)->create([
+                            'school_id'         => $standard->school_id,
+                            'academic_year_id'  => $academic_year->id,
+                            'standard_id'       => $standard->id,
+                            'section_id'        => $section->id,
+                            'class_teacher_id'  => $teacherId
                         ]);
 
                         RoleUser::factory(1)->create([
-                            'user_id'   =>  $teachers[$sectionRef],
-                            'role_id'   =>  4, 
+                            'user_id'   => $teacherId,
+                            'role_id'   => 4, 
                         ]);
                     }
                 }
